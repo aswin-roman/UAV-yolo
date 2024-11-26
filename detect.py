@@ -65,6 +65,9 @@ from utils.general import (
 )
 from utils.torch_utils import select_device, smart_inference_mode
 
+def play_beep():
+    os.system('play -nq -t alsa synth 0.5 sine 1000')  # Requires 'sox' installed
+
 
 @smart_inference_mode()
 def run(
@@ -256,6 +259,9 @@ def run(
                     label = names[c] if hide_conf else f"{names[c]}"
                     confidence = float(conf)
                     confidence_str = f"{confidence:.2f}"
+
+                    # Play beep sound on detection
+                    play_beep()
 
                     if save_csv:
                         write_to_csv(p.name, label, confidence_str)
