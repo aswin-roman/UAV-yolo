@@ -65,10 +65,6 @@ from utils.general import (
 )
 from utils.torch_utils import select_device, smart_inference_mode
 
-def play_beep():
-    os.system('play -nq -t alsa synth 0.5 sine 1000')  # Requires 'sox' installed
-
-
 @smart_inference_mode()
 def run(
     weights=ROOT / "yolov5s.pt",  # model path or triton URL
@@ -151,6 +147,7 @@ def run(
         run(source='data/videos/example.mp4', weights='yolov5s.pt', conf_thres=0.4, device='0')
         ```
     """
+
     source = str(source)
     save_img = not nosave and not source.endswith(".txt")  # save inference images
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
@@ -244,6 +241,7 @@ def run(
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             imc = im0.copy() if save_crop else im0  # for save_crop
             annotator = Annotator(im0, line_width=line_thickness, example=str(names))
+
             if len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], im0.shape).round()
@@ -259,9 +257,6 @@ def run(
                     label = names[c] if hide_conf else f"{names[c]}"
                     confidence = float(conf)
                     confidence_str = f"{confidence:.2f}"
-
-                    # Play beep sound on detection
-                    play_beep()
 
                     if save_csv:
                         write_to_csv(p.name, label, confidence_str)
