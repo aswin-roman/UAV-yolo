@@ -26,9 +26,9 @@ def monitor_folder(path):
         return
 
     # Clean the dir before starting
-    print(f"Cleaning folder: {path}")
+    print(f"Cleaning old detections: {path}")
     clean_folder(path)
-    print(f"Monitoring folder: {path}")
+    print(f"Monitoring: {path}")
     print("Press Ctrl+C to stop the script.")
 
     # Get the initial count of labels
@@ -38,7 +38,7 @@ def monitor_folder(path):
         while True:
             current_file_count = len(os.listdir(path))
             if current_file_count > previous_file_count:
-                print(f"File count increased: {current_file_count} files")
+                print(f"New detections: {current_file_count}")
                 beep()
 
             # Update file count
