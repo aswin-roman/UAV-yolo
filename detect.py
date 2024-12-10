@@ -27,6 +27,7 @@ Usage - formats:
                                  yolov5s_edgetpu.tflite     # TensorFlow Edge TPU
                                  yolov5s_paddle_model       # PaddlePaddle
 """
+import time
 
 import argparse
 import csv
@@ -147,6 +148,8 @@ def run(
         run(source='data/videos/example.mp4', weights='yolov5s.pt', conf_thres=0.4, device='0')
         ```
     """
+    next_beep = time.time()
+
 
     source = str(source)
     save_img = not nosave and not source.endswith(".txt")  # save inference images
@@ -261,6 +264,9 @@ def run(
                     if save_csv:
                         write_to_csv(p.name, label, confidence_str)
 
+                    bbox_width = xyxy[2] - xyxy[0]
+                    bbox_height = xyxy[3] - xyxy[1]
+                    bbox_area = bbox_width * bbox_height 
                     if save_txt:  # Write to file
                         if save_format == 0:
                             coords = (
@@ -271,6 +277,12 @@ def run(
                         line = (cls, *coords, conf) if save_conf else (cls, *coords)  # label format
                         with open(f"{txt_path}.txt", "a") as f:
                             f.write(("%g " * len(line)).rstrip() % line + "\n")
+
+                        current_time = time.time()
+                        #print(current_time)
+                        if current_time >= next_beep:
+                            print("\a")  # Trigger beep
+                            next_beep = current_time + 150000 / bbox_area
 
                     if save_img or save_crop or view_img:  # Add bbox to image
                         c = int(cls)  # integer class
