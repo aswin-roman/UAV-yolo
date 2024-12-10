@@ -279,10 +279,21 @@ def run(
                             f.write(("%g " * len(line)).rstrip() % line + "\n")
 
                         current_time = time.time()
-                        #print(current_time)
+                        print("---------")
+                        print("ct:", current_time)
+                        print("nb:", next_beep)
                         if current_time >= next_beep:
                             print("\a")  # Trigger beep
-                            next_beep = current_time + 150000 / bbox_area
+                            #delta = (-.00001466*float(bbox_area)) + 2.00147 #129600 to 100
+                            #delta = (-.0001919*float(bbox_area)) + 2.01919 #10000 to 100
+                            #delta = (-.0003877*float(bbox_area)) + 2.03877 #5000 to 100
+                            #delta = (-.00079166*float(bbox_area)) + 2.079166 #2500 to 100
+                            #delta = (-.0007677*float(bbox_area)) + 2.0192 #2500 to 25
+                            delta = (-.00211*float(bbox_area)) + 2.2111 #1000 to 100
+                            #delta = (-.0019487*float(bbox_area)) + 2.0487 #1000 to 25
+                            next_beep = current_time + delta
+                            #next_beep = current_time + min(max(0.1, delta), 2)
+                            #next_beep = current_time + min(max(0.1, 1000. / float(bbox_area)), 2) #delay.................................................................................
 
                     if save_img or save_crop or view_img:  # Add bbox to image
                         c = int(cls)  # integer class
